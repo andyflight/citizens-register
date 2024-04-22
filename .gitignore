@@ -1,0 +1,13 @@
+### Python ###
+.venv/
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+citizens/migrations/
+/core/settings.py
+
+### PyCharm ###
+.idea/
