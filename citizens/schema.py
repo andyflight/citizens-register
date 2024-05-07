@@ -1,52 +1,15 @@
 
 import graphene
-from graphene_django import DjangoObjectType
 from .models import Address, Citizen, Hromada, District, Locality, Passport, Phone, TerritoryUnit
-
-class AddressType(DjangoObjectType):
-    class Meta:
-        model = Address
-        fields = ("id", "index", "street", "house", "flat", "locality", "citizen_set")
-
-class CitizenType(DjangoObjectType):
-    class Meta:
-        model = Citizen
-        fields = ("id", "name", "last_name", "father_name", "ipn", "martial_status", "address", "passport_set", "phone_set")
-
-class DistrictType(DjangoObjectType):
-    class Meta:
-        model = District
-        fields = ("id", "name", "terr_unit", "hromada_set")
-
-
-class HromadaType(DjangoObjectType):
-    class Meta:
-        model = Hromada
-        fields = ("id", "type", "name", "district", "locality_set")
-
-
-class LocalityType(DjangoObjectType):
-    class Meta:
-        model = Locality
-        fields = ("id", "type", "name", "terr_unit", "hromada", "address_set")
-
-
-class PassportType(DjangoObjectType):
-    class Meta:
-        model = Passport
-        fields = ("id", "type", "sex", "number", "series", "issuing_authority", "birth_date", "birth_date", "expiration_date", "citizen")
-
-class PhoneType(DjangoObjectType):
-    class Meta:
-        model = Phone
-        fields = ("id", "number", "type", "citizen")
-
-
-class TerritoryUnitType(DjangoObjectType):
-    class Meta:
-        model = TerritoryUnit
-        fields = ("id", "name")
-
+from .types.types import AddressType, CitizenType, HromadaType, DistrictType, LocalityType, PassportType, PhoneType, TerritoryUnitType
+from .mutations.address import CreateAddress, UpdateAddress, DeleteAddress
+from .mutations.passport import CreatePassport, UpdatePassport, DeletePassport
+from .mutations.territory import CreateTerritory, UpdateTerritory, DeleteTerritory
+from .mutations.phone import CreatePhone, UpdatePhone, DeletePhone
+from .mutations.citizen import CreateCitizen, UpdateCitizen, DeleteCitizen
+from .mutations.district import CreateDistrict, UpdateDistrict, DeleteDistrict
+from .mutations.hromada import CreateHromada, UpdateHromada, DeleteHromada
+from .mutations.locality import CreateLocality, UpdateLocality, DeleteLocality
 
 class Query(graphene.ObjectType):
     addresses = graphene.List(AddressType)
@@ -59,12 +22,14 @@ class Query(graphene.ObjectType):
     localities = graphene.List(LocalityType)
 
     def resolve_addresses(self, info, **kwargs):
+
         return Address.objects.all()
 
     def resolve_passports(self, info, **kwargs):
         return Passport.objects.all()
 
     def resolve_territories(self, info, **kwargs):
+
         return TerritoryUnit.objects.all()
 
     def resolve_phones(self, info, **kwargs):
@@ -82,6 +47,41 @@ class Query(graphene.ObjectType):
     def resolve_localities(self, info, **kwargs):
         return Locality.objects.all()
 
-schema = graphene.Schema(query=Query)
+
+class Mutation(graphene.ObjectType):
+    create_address = CreateAddress.Field()
+    update_address = UpdateAddress.Field()
+    delete_address = DeleteAddress.Field()
+
+    create_passport = CreatePassport.Field()
+    update_passport = UpdatePassport.Field()
+    delete_passport = DeletePassport.Field()
+
+    create_territory = CreateTerritory.Field()
+    update_territory = UpdateTerritory.Field()
+    delete_territory = DeleteTerritory.Field()
+
+    create_phone = CreatePhone.Field()
+    update_phone = UpdatePhone.Field()
+    delete_phone = DeletePhone.Field()
+
+    create_citizen = CreateCitizen.Field()
+    update_citizen = UpdateCitizen.Field()
+    delete_citizen = DeleteCitizen.Field()
+
+    create_district = CreateDistrict.Field()
+    update_district = UpdateDistrict.Field()
+    delete_district = DeleteDistrict.Field()
+
+    create_hromada = CreateHromada.Field()
+    update_hromada = UpdateHromada.Field()
+    delete_hromada = DeleteHromada.Field()
+
+    create_locality = CreateLocality.Field()
+    update_locality = UpdateLocality.Field()
+    delete_locality = DeleteLocality.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
 
 
